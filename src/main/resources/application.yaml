@@ -1,0 +1,4 @@
+http {
+  host: "http://localhost"
+  port: 4000
+}
