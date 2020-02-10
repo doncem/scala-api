@@ -10,7 +10,9 @@ libraryDependencies ++= Seq(
   "com.github.pureconfig" %% "pureconfig-fs2" % "0.12.2",
   "com.github.pureconfig" %% "pureconfig-yaml" % "0.12.2",
   "com.typesafe.scala-logging" %% "scala-logging"   % "3.9.2",
+  "io.circe" %% "circe-generic" % "0.13.0-RC1",
   "org.http4s" %% "http4s-blaze-server" % "0.21.0-RC5",
+  "org.http4s" %% "http4s-circe" % "0.21.0-RC5",
   "org.http4s" %% "http4s-dsl" % "0.21.0-RC5",
   "org.typelevel" %% "cats-effect" % "2.1.1"
 )
