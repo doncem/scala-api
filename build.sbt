@@ -1,4 +1,4 @@
-name := "scala-api"
+name := "api"
 
 version := "0.1"
 
