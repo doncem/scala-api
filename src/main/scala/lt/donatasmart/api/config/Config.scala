@@ -10,9 +10,10 @@ import pureconfig.module.fs2.streamConfig
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
+case class App(pool: Int)
 case class Http(host: String, port: Int)
 
-case class Config(http: Http)
+case class Config(app: App, http: Http)
 
 object Config {
   private val chunkSize = 4096

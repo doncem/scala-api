@@ -1,3 +1,7 @@
+app {
+  pool: 4
+}
+
 http {
   host: "http://localhost"
   port: 4000
