@@ -25,7 +25,7 @@ class ApiTest extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
 
   val api = new Api[IO]()
   val server: Resource[IO, Server[IO]] = Config.load.map(config =>
-    BlazeServerBuilder[IO].bindLocal(config.http.port).withHttpApp(api.routes).resource
+    BlazeServerBuilder[IO](global).bindLocal(config.http.port).withHttpApp(api.routes).resource
   ).unsafeRunSync()
   val fiber: Fiber[IO, Nothing] = server.use(_ => IO.never).start.unsafeRunSync()
 
