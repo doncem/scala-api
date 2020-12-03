@@ -20,10 +20,12 @@ import scala.concurrent.ExecutionContext.global
 
 class ApiTest extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
 
+  private val API_NAME = "Test API"
+
   implicit val contextShift: ContextShift[IO] = IO.contextShift(global)
   implicit val timer: Timer[IO] = IO.timer(global)
 
-  val api = new Api[IO]()
+  val api = new Api[IO](API_NAME)
   val server: Resource[IO, Server[IO]] = Config.load.map(config =>
     BlazeServerBuilder[IO](global).bindLocal(config.http.port).withHttpApp(api.routes).resource
   ).unsafeRunSync()
@@ -36,7 +38,7 @@ class ApiTest extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
   "API" should "greet consumer" in {
     httpClient.get[Unit]("http://localhost:4000/") { response =>
       response.status shouldBe Status.Ok
-      response.as[Message].unsafeRunSync() shouldEqual Message("Welcome to API")
+      response.as[Message].unsafeRunSync() shouldEqual Message(s"Welcome to $API_NAME")
 
       IO(null)
     }.unsafeRunSync()

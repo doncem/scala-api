@@ -10,10 +10,10 @@ import org.http4s.circe.CirceEntityEncoder.circeEntityEncoder
 import org.http4s.implicits.http4sKleisliResponseSyntaxOptionT
 import org.http4s.server.Router
 
-class Api[F[_]: Sync: Tracer] extends Http4sTracerDsl[F] {
+class Api[F[_]: Sync: Tracer](name: String) extends Http4sTracerDsl[F] {
 
   private val simpleRoutes: HttpRoutes[F] = TracedHttpRoute[F] {
-    case GET -> Root using _ => Ok(Message("Welcome to API"))
+    case GET -> Root using _ => Ok(Message(s"Welcome to $name"))
   }
 
   val routes: HttpApp[F] = Router(

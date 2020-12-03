@@ -10,7 +10,7 @@ import pureconfig.module.fs2.streamConfig
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-case class App(pool: Int)
+case class App(name: String, pool: Int)
 case class Http(host: String, port: Int)
 
 case class Config(app: App, http: Http)

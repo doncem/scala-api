@@ -21,7 +21,7 @@ object MainApp extends IOApp {
       pool.awaitTermination(10, TimeUnit.SECONDS)
       null
     })).map(ExecutionContext.fromExecutorService)
-    api = new Api[IO]()
+    api = new Api[IO](config.app.name)
     tracedApi = Tracer[IO].middleware(api.routes, logRequest = true, logResponse = true)
     _ <- BlazeServerBuilder[IO](ec).bindLocal(config.http.port).withHttpApp(tracedApi).serve
   } yield ()
