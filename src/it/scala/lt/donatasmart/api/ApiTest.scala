@@ -20,14 +20,14 @@ import scala.concurrent.ExecutionContext.global
 
 class ApiTest extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
 
-  private val API_NAME = "Test API"
+  private val API_NAME = "Demo"
 
   implicit val contextShift: ContextShift[IO] = IO.contextShift(global)
   implicit val timer: Timer[IO] = IO.timer(global)
 
   val api = new Api[IO](API_NAME)
   val server: Resource[IO, Server[IO]] = Config.load.map(config =>
-    BlazeServerBuilder[IO](global).bindLocal(config.http.port).withHttpApp(api.routes).resource
+    BlazeServerBuilder[IO](global).bindLocal(config.http.port).withHttpApp(api.routes).withBanner(Config.banner.compile.foldMonoid.unsafeRunSync()).resource
   ).unsafeRunSync()
   val fiber: Fiber[IO, Nothing] = server.use(_ => IO.never).start.unsafeRunSync()
 
