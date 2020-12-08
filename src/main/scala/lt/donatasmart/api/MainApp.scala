@@ -15,7 +15,8 @@ import scala.concurrent.ExecutionContext
 object MainApp extends IOApp {
 
   lazy val module: Stream[IO, Unit] = for {
-    banner <- Config.banner
+    defaultBanner <- Config.defaultBanner
+    banner <- Config.customBanner
     config <- Stream.eval(Config.load)
     ec <- Stream.resource(Resource.make(IO(Executors.newFixedThreadPool(config.app.pool)))(pool => IO {
       pool.shutdown()
@@ -24,7 +25,11 @@ object MainApp extends IOApp {
     })).map(ExecutionContext.fromExecutorService)
     api = new Api[IO](config.app.name)
     tracedApi = Tracer[IO].middleware(api.routes, logRequest = true, logResponse = true)
-    _ <- BlazeServerBuilder[IO](ec).bindLocal(config.http.port).withHttpApp(tracedApi).withBanner(banner).serve
+    _ <- BlazeServerBuilder[IO](ec)
+      .bindLocal(config.http.port)
+      .withBanner(if (banner.isEmpty) defaultBanner else banner)
+      .withHttpApp(tracedApi)
+      .serve
   } yield ()
 
   override def run(args: List[String]): IO[ExitCode] = module.compile.drain.as(ExitCode.Success)

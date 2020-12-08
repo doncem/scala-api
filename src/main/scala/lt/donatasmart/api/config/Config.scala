@@ -11,6 +11,8 @@ import pureconfig.generic.auto._
 import pureconfig.module.fs2.streamConfig
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.io.Source
+import scala.util.Try
 
 case class App(name: String, pool: Int)
 case class Http(host: String, port: Int)
@@ -26,9 +28,14 @@ object Config {
   private lazy val configStream = file.readAll[IO](Path.of(getClass.getClassLoader.getResource("application.yaml").getPath), blocker, chunkSize)
 
   lazy val load: IO[Config] = streamConfig[IO, Config](configStream)
-  lazy val banner: Stream[IO, Seq[String]] = file
-    .readAll[IO](Path.of(getClass.getClassLoader.getResource("banner.txt").getPath), blocker, chunkSize)
+  lazy val defaultBanner: Stream[IO, Seq[String]] = file
+    .readAll[IO](Path.of(getClass.getClassLoader.getResource("default-banner.txt").getPath), blocker, chunkSize)
     .through(text.utf8Decode)
     .through(text.lines)
     .fold(Seq.empty[String])((seq, string) => seq :+ string)
+  lazy val customBanner: Stream[IO, Seq[String]] = Stream.eval(IO(
+    Try(Source.fromResource("banner.txt"))
+      .map(_.getLines())
+      .getOrElse(Iterator.empty)
+  )).map(_.toSeq)
 }
