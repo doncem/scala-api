@@ -13,7 +13,7 @@ import org.http4s.server.blaze.BlazeServerBuilder
 
 import scala.concurrent.ExecutionContext
 
-object MainApp extends IOApp {
+trait MainApp extends IOApp {
 
   def allRoutes(config: AppConfig): Seq[Route[IO]] = Seq(new SimpleRoutes(config))
 
