@@ -7,15 +7,19 @@ import dev.profunktor.tracer.Tracer
 import dev.profunktor.tracer.instances.tracer.defaultTracer
 import dev.profunktor.tracer.instances.tracerlog.defaultLog
 import fs2.Stream
-import lt.donatasmart.api.config.{AppConfig, Config}
+import lt.donatasmart.api.config.{AppConfig, AppContext, Config}
 import lt.donatasmart.api.routes.{Route, SimpleRoutes}
 import org.http4s.server.blaze.BlazeServerBuilder
+import pureconfig.ConfigReader
+import pureconfig.generic.auto._
 
 import scala.concurrent.ExecutionContext
 
 trait MainApp extends IOApp {
 
-  def allRoutes(config: AppConfig): Seq[Route[IO]] = Seq(new SimpleRoutes(config))
+  implicit val appContextReader: ConfigReader[AppContext] = ConfigReader[AppConfig].map(_.asInstanceOf[AppContext])
+
+  def allRoutes(config: AppContext): Seq[Route[IO]] = Seq(new SimpleRoutes(config.asInstanceOf[AppConfig]))
 
   def errorHandler: BaseErrorHandler[IO] = BaseErrorHandler[IO]()
 

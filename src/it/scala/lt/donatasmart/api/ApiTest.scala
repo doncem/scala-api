@@ -5,7 +5,7 @@ import java.util.concurrent.{ExecutorService, Executors}
 import cats.effect.{Blocker, ContextShift, Fiber, IO, Resource, Timer}
 import dev.profunktor.tracer.instances.tracer.defaultTracer
 import io.circe.generic.auto.exportDecoder
-import lt.donatasmart.api.config.Config
+import lt.donatasmart.api.config.{AppConfig, Config}
 import lt.donatasmart.api.model.response.Message
 import lt.donatasmart.api.routes.SimpleRoutes
 import org.http4s.Status
@@ -26,8 +26,8 @@ class ApiTest extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
   implicit val contextShift: ContextShift[IO] = IO.contextShift(global)
   implicit val timer: Timer[IO] = IO.timer(global)
 
-  val server: Resource[IO, Server[IO]] = Config.load.map(config =>
-    BlazeServerBuilder[IO](global).bindLocal(config.http.port).withHttpApp(new Api[IO](Seq(new SimpleRoutes[IO](config.app.context))).routes).withBanner(Config.defaultBanner.compile.foldMonoid.unsafeRunSync()).resource
+  val server: Resource[IO, Server[IO]] = Config.load(MainApp.appContextReader).map(config =>
+    BlazeServerBuilder[IO](global).bindLocal(config.http.port).withHttpApp(new Api[IO](Seq(new SimpleRoutes[IO](config.app.context.asInstanceOf[AppConfig]))).routes).withBanner(Config.defaultBanner.compile.foldMonoid.unsafeRunSync()).resource
   ).unsafeRunSync()
   val fiber: Fiber[IO, Nothing] = server.use(_ => IO.never).start.unsafeRunSync()
 

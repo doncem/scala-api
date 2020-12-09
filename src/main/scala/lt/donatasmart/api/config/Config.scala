@@ -7,6 +7,7 @@ import cats.effect.{Blocker, ContextShift, IO}
 import fs2.Stream
 import fs2.io.file
 import fs2.text
+import pureconfig.ConfigReader
 import pureconfig.generic.auto._
 import pureconfig.module.fs2.streamConfig
 
@@ -14,8 +15,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
 import scala.util.Try
 
-case class AppConfig(name: String)
-case class App(context: AppConfig, pool: Int)
+trait AppContext
+case class AppConfig(name: String) extends AppContext
+case class App(context: AppContext, pool: Int)
 case class Log(request: Boolean, response: Boolean)
 case class Http(host: String, log: Log, port: Int)
 
@@ -29,7 +31,7 @@ object Config {
 
   private lazy val configStream = file.readAll[IO](Path.of(getClass.getClassLoader.getResource("application.yaml").getPath), blocker, chunkSize)
 
-  lazy val load: IO[Config] = streamConfig[IO, Config](configStream)
+  def load(implicit appContextReader: ConfigReader[AppContext]): IO[Config] = streamConfig[IO, Config](configStream)
   lazy val defaultBanner: Stream[IO, Seq[String]] = file
     .readAll[IO](Path.of(getClass.getClassLoader.getResource("default-banner.txt").getPath), blocker, chunkSize)
     .through(text.utf8Decode)
