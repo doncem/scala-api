@@ -17,6 +17,8 @@ object MainApp extends IOApp {
 
   def allRoutes(config: AppConfig): Seq[Route[IO]] = Seq(new SimpleRoutes(config))
 
+  def errorHandler: BaseErrorHandler[IO] = BaseErrorHandler[IO]()
+
   lazy val module: Stream[IO, Unit] = for {
     defaultBanner <- Config.defaultBanner
     banner <- Config.customBanner
@@ -35,6 +37,7 @@ object MainApp extends IOApp {
       .bindLocal(config.http.port)
       .withBanner(if (banner.isEmpty) defaultBanner else banner)
       .withHttpApp(tracedApi)
+      .withServiceErrorHandler(errorHandler.get)
       .serve
   } yield ()
 
