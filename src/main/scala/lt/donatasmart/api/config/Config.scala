@@ -14,8 +14,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
 import scala.util.Try
 
-case class App(name: String, pool: Int)
-case class Http(host: String, port: Int)
+case class AppConfig(name: String)
+case class App(context: AppConfig, pool: Int)
+case class Log(request: Boolean, response: Boolean)
+case class Http(host: String, log: Log, port: Int)
 
 case class Config(app: App, http: Http)
 

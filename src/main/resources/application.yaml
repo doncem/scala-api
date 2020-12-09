@@ -1,9 +1,15 @@
 app {
-  name: "Demo"
+  context {
+    name: "Demo"
+  }
   pool: 4
 }
 
 http {
   host: "http://localhost"
+  log {
+    request: true
+    response: true
+  }
   port: 4000
 }
