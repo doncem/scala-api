@@ -3,7 +3,6 @@ package lt.donatasmart.api
 import java.util.concurrent.{ExecutorService, Executors}
 
 import cats.effect.{Blocker, ContextShift, Fiber, IO, Resource, Timer}
-import cats.instances.all.catsKernelStdMonoidForSeq
 import dev.profunktor.tracer.instances.tracer.defaultTracer
 import io.circe.generic.auto.exportDecoder
 import lt.donatasmart.api.core.config
@@ -29,7 +28,7 @@ class ApiTest extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
   implicit val timer: Timer[IO] = IO.timer(global)
 
   val server: Resource[IO, Server[IO]] = config.load(TestApp.appContextReader).map(appConfig =>
-    BlazeServerBuilder[IO](global).bindLocal(appConfig.http.port).withHttpApp(new Api[IO](Seq(new SimpleRoutes[IO](appConfig.app.context.asInstanceOf[config.AppConfig]))).routes).withBanner(config.defaultBanner.compile.foldMonoid.unsafeRunSync()).resource
+    BlazeServerBuilder[IO](global).bindLocal(appConfig.http.port).withHttpApp(new Api[IO](Seq(new SimpleRoutes[IO](appConfig.app.context.asInstanceOf[config.AppConfig]))).routes).withBanner(config.defaultBanner.compile.lastOrError.unsafeRunSync()).resource
   ).unsafeRunSync()
   val fiber: Fiber[IO, Nothing] = server.use(_ => IO.never).start.unsafeRunSync()
 
