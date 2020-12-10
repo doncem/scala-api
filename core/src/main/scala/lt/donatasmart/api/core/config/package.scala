@@ -1,4 +1,4 @@
-package lt.donatasmart.api.config
+package lt.donatasmart.api.core
 
 import java.nio.file.Path
 import java.util.concurrent.Executors
@@ -15,15 +15,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
 import scala.util.Try
 
-trait AppContext
-case class AppConfig(name: String) extends AppContext
-case class App(context: AppContext, pool: Int)
-case class Log(request: Boolean, response: Boolean)
-case class Http(host: String, log: Log, port: Int)
+package object config {
 
-case class Config(app: App, http: Http)
-
-object Config {
   private val chunkSize = 4096
 
   implicit private val contextShift: ContextShift[IO] = IO.contextShift(global)

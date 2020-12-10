@@ -7,7 +7,8 @@ import dev.profunktor.tracer.Tracer
 import dev.profunktor.tracer.instances.tracer.defaultTracer
 import dev.profunktor.tracer.instances.tracerlog.defaultLog
 import fs2.Stream
-import lt.donatasmart.api.config.{AppConfig, AppContext, Config}
+import lt.donatasmart.api.core.config
+import lt.donatasmart.api.core.config.{AppConfig, AppContext}
 import lt.donatasmart.api.routes.{Route, SimpleRoutes}
 import org.http4s.server.blaze.BlazeServerBuilder
 import pureconfig.ConfigReader
@@ -24,9 +25,9 @@ trait MainApp extends IOApp {
   def errorHandler: BaseErrorHandler[IO] = BaseErrorHandler[IO]()
 
   lazy val module: Stream[IO, Unit] = for {
-    defaultBanner <- Config.defaultBanner
-    banner <- Config.customBanner
-    config <- Stream.eval(Config.load)
+    defaultBanner <- config.defaultBanner
+    banner <- config.customBanner
+    config <- Stream.eval(config.load)
     ec <- Stream.resource(Resource.make(IO(Executors.newFixedThreadPool(config.app.pool)))(pool => IO {
       pool.shutdown()
       pool.awaitTermination(10, TimeUnit.SECONDS)

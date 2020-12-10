@@ -24,4 +24,5 @@ lazy val api = (project in file("."))
     Defaults.itSettings,
     libraryDependencies ++= Dependencies.api
   )
+  .dependsOn(core % "test->test;compile->compile")
   .aggregate(core)
