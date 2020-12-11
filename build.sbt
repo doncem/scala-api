@@ -16,6 +16,15 @@ lazy val core = (project in file("core"))
     libraryDependencies ++= Dependencies.core
   )
 
+lazy val db = (project in file("db"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "api-db",
+    libraryDependencies ++= Dependencies.db
+  )
+  .dependsOn(core % "test->test;compile->compile")
+  .aggregate(core)
+
 lazy val api = (project in file("."))
   .configs(IntegrationTest)
   .settings(commonSettings: _*)

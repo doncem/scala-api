@@ -9,6 +9,7 @@ object Dependencies {
   core ------ api
    */
   lazy val core: Seq[ModuleID] = pureconfig
+  lazy val db: Seq[ModuleID] = Seq()
   lazy val api: Seq[ModuleID] = logging ++ http4s ++ json :+
     "org.scalatest" %% "scalatest" % "3.2.2" % "test,it" :+
     "org.typelevel" %% "cats-effect" % "2.3.0" % "test"
