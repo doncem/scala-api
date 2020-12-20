@@ -1,0 +1,15 @@
+app {
+  context {
+    name: "IT Tests"
+  }
+  pool: 1
+}
+
+http {
+  host: "http://localhost"
+  log {
+    request: true
+    response: true
+  }
+  port: 4000
+}

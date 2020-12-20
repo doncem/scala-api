@@ -1,11 +1,11 @@
 package lt.donatasmart.api
 
 import java.util.concurrent.{ExecutorService, Executors}
-
 import cats.effect.{Blocker, ContextShift, Fiber, IO, Resource, Timer}
 import dev.profunktor.tracer.instances.tracer.defaultTracer
 import io.circe.generic.auto.exportDecoder
 import lt.donatasmart.api.core.config
+import lt.donatasmart.api.core.config.{AppConfig, AppContext}
 import lt.donatasmart.api.model.response.Message
 import lt.donatasmart.api.routes.SimpleRoutes
 import org.http4s.Status
@@ -16,13 +16,17 @@ import org.http4s.server.blaze.BlazeServerBuilder
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import pureconfig.ConfigReader
+import pureconfig.generic.auto._
 
 import scala.concurrent.ExecutionContext.global
 
 class ApiTest extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
-  object TestApp extends MainApp
+  object TestApp extends MainApp {
+    implicit lazy val appContextReader: ConfigReader[AppContext] = ConfigReader[AppConfig].map(_.asInstanceOf[AppContext])
+  }
 
-  private val API_NAME = "Demo"
+  private val API_NAME = "IT Tests"
 
   implicit val contextShift: ContextShift[IO] = IO.contextShift(global)
   implicit val timer: Timer[IO] = IO.timer(global)

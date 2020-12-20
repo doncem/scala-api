@@ -19,7 +19,7 @@ package object config {
 
   private val chunkSize = 4096
 
-  implicit private val contextShift: ContextShift[IO] = IO.contextShift(global)
+  implicit lazy val contextShiftForConfigs: ContextShift[IO] = IO.contextShift(global)
   private val blocker: Blocker = Blocker.liftExecutorService(Executors.newCachedThreadPool())
 
   private lazy val configStream = file.readAll[IO](Path.of(getClass.getClassLoader.getResource("application.yaml").getPath), blocker, chunkSize)
