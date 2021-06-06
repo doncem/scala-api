@@ -1,15 +1,13 @@
 package lt.donatasmart.api.db
 
-import cats.effect.{Blocker, IO, Resource}
+import cats.effect.{IO, Resource}
 import doobie.ExecutionContexts
 import doobie.hikari.HikariTransactor
-import lt.donatasmart.api.WithDb
+import lt.donatasmart.api.core.config.WithConfig
 
-trait WithDoobieDb extends WithDb[HikariTransactor] {
+trait WithDoobieDb extends WithConfig {
 
-  import lt.donatasmart.api.core.config.contextShiftForConfigs
-
-  override lazy val dbConfig: DbResource[IO] = for {
+  lazy val dbConfig: Resource[IO, HikariTransactor[IO]] = for {
     config <- Resource.make(dbConfigIo)(_ => IO.unit)
     ec <- ExecutionContexts.cachedThreadPool[IO]
     tr <- HikariTransactor.newHikariTransactor[IO](
@@ -17,8 +15,7 @@ trait WithDoobieDb extends WithDb[HikariTransactor] {
       config.url,
       config.username,
       config.password,
-      ec,
-      Blocker.liftExecutionContext(ec)
+      ec
     )
   } yield tr
 }

@@ -10,7 +10,7 @@ object Dependencies {
    */
   lazy val core: Seq[ModuleID] = pureconfig :+ "org.typelevel" %% "cats-effect" % "3.1.1"
   lazy val doobieDb: Seq[ModuleID] = Seq(
-    "org.tpolecat" %% "doobie-hikari" % "0.13.4"
+    "org.tpolecat" %% "doobie-hikari" % "1.0.0-M5"
   )
   lazy val api: Seq[ModuleID] = logging ++ http4s ++ json :+ "org.scalatest" %% "scalatest" % "3.2.9" % "test,it"
 
@@ -33,6 +33,6 @@ object Dependencies {
   )
 
   private val json = Seq(
-    "io.circe" %% "circe-generic" % "0.13.0"
+    "io.circe" %% "circe-generic" % "0.14.1"
   )
 }

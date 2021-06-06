@@ -5,6 +5,13 @@ app {
   pool: 4
 }
 
+db {
+  driver-name: "driver"
+  url: "url"
+  username: "username"
+  password: "password"
+}
+
 http {
   host: "http://localhost"
   port: 5000
