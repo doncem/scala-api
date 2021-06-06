@@ -11,6 +11,6 @@ class SimpleRoutes[F[_]: Sync](config: AppConfig) extends Route[F] {
   override lazy val prefix: String = "/"
 
   override lazy val routes: Routes = {
-    case GET -> Root using _ => Ok(Message(s"Welcome to ${config.name}"))
+    case GET -> Root => Ok(Message(s"Welcome to ${config.name}"))
   }
 }

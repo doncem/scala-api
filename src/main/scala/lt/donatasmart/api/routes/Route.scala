@@ -1,12 +1,11 @@
 package lt.donatasmart.api.routes
 
-import dev.profunktor.tracer.Http4sTracerDsl
-import dev.profunktor.tracer.TracedHttpRoute.TracedRequest
-import org.http4s.Response
+import org.http4s.dsl.Http4sDsl
+import org.http4s.{Request, Response}
 
-trait Route[F[_]] extends Http4sTracerDsl[F] {
+trait Route[F[_]] extends Http4sDsl[F] {
 
-  type Routes = PartialFunction[TracedRequest[F], F[Response[F]]]
+  type Routes = PartialFunction[Request[F], F[Response[F]]]
 
   def prefix: String
 

@@ -7,9 +7,5 @@ app {
 
 http {
   host: "http://localhost"
-  log {
-    request: true
-    response: true
-  }
-  port: 4000
+  port: 5000
 }

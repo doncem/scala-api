@@ -2,17 +2,17 @@ import sbt._
 
 object Dependencies {
 
-  private val http4sV     = "0.21.13"
-  private val pureconfigV = "0.14.0"
+  private val http4sV     = "0.23.0-RC1"
+  private val pureconfigV = "0.15.0"
 
   /*
   core ------ api
    */
-  lazy val core: Seq[ModuleID] = pureconfig :+ "org.typelevel" %% "cats-effect" % "2.3.0"
+  lazy val core: Seq[ModuleID] = pureconfig :+ "org.typelevel" %% "cats-effect" % "3.1.1"
   lazy val doobieDb: Seq[ModuleID] = Seq(
-    "org.tpolecat" %% "doobie-hikari" % "0.9.4"
+    "org.tpolecat" %% "doobie-hikari" % "0.13.4"
   )
-  lazy val api: Seq[ModuleID] = logging ++ http4s ++ json :+ "org.scalatest" %% "scalatest" % "3.2.2" % "test,it"
+  lazy val api: Seq[ModuleID] = logging ++ http4s ++ json :+ "org.scalatest" %% "scalatest" % "3.2.9" % "test,it"
 
   private val pureconfig = Seq(
     "com.github.pureconfig" %% "pureconfig"       % pureconfigV,
@@ -22,15 +22,14 @@ object Dependencies {
 
   private val logging = Seq(
     "ch.qos.logback"              % "logback-classic" % "1.3.0-alpha5",
-    "com.typesafe.scala-logging" %% "scala-logging"   % "3.9.2"
+    "com.typesafe.scala-logging" %% "scala-logging"   % "3.9.3"
   )
 
   private val http4s = Seq(
-    "dev.profunktor"  %% "http4s-tracer"        % "1.5.3",
-    "org.http4s"      %% "http4s-blaze-client"  % http4sV % "it",
-    "org.http4s"      %% "http4s-blaze-server"  % http4sV,
-    "org.http4s"      %% "http4s-circe"         % http4sV,
-    "org.http4s"      %% "http4s-dsl"           % http4sV
+    "org.http4s"  %% "http4s-blaze-client"  % http4sV % "it",
+    "org.http4s"  %% "http4s-blaze-server"  % http4sV,
+    "org.http4s"  %% "http4s-circe"         % http4sV,
+    "org.http4s"  %% "http4s-dsl"           % http4sV
   )
 
   private val json = Seq(
