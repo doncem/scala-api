@@ -17,10 +17,10 @@ trait MainApp extends IOApp with WithConfig {
   def errorHandler: BaseErrorHandler[IO] = BaseErrorHandler[IO]()
 
   def serverBuilder(ec: ExecutionContext, config: Config, banner: Seq[String]): BlazeServerBuilder[IO] = BlazeServerBuilder[IO](ec)
-      .bindLocal(config.http.port)
-      .withBanner(banner)
-      .withHttpApp(new Api[IO](allRoutes(config)).routes)
-      .withServiceErrorHandler(errorHandler.get)
+    .bindLocal(config.http.port)
+    .withBanner(banner)
+    .withHttpApp(new Api[IO](allRoutes(config)).routes)
+    .withServiceErrorHandler(errorHandler.get)
 
   lazy val module: Stream[IO, Unit] = for {
     defaultBanner <- config.defaultBanner
